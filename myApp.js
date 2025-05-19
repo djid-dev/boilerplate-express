@@ -1,5 +1,6 @@
 require("dotenv").config();
-const bodyParser = require("body-parser")
+
+const bodyParser = require("body-parser");
 
 let express = require("express");
 let app = express();
@@ -34,15 +35,18 @@ app.get("/json", (req, res) => {
   });
 });
 
-app.get("/now", (req, res, next) => {
-  req.time = new Date().toString();
-  next();
-});
-app.get("/now", (req, res) => {
-  res.json({
-    time: req.time,
-  });
-});
+app.get(
+  "/now",
+  (req, res, next) => {
+    req.time = new Date().toString();
+    next();
+  },
+  (req, res) => {
+    res.json({
+      time: req.time,
+    });
+  }
+);
 
 app.get("/:word/echo", (req, res) =>
   res.json({
@@ -50,12 +54,21 @@ app.get("/:word/echo", (req, res) =>
   })
 );
 
-app.route("/name").get( (req, res) => {
-  const first = req.query.first;
-  const last = req.query.last;
-  res.json({
-    name: `${first} ${last}`,
+app
+  .route("/name")
+  .get((req, res) => {
+    const first = req.query.first;
+    const last = req.query.last;
+    res.json({
+      name: `${first} ${last}`,
+    });
+  })
+  .post((req, res) => {
+    const first = req.body.first;
+    const last = req.body.last;
+    res.json({
+      name: `${first} ${last}`,
+    });
   });
-})
 
 module.exports = app;
